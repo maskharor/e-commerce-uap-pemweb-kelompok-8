@@ -37,17 +37,6 @@
                     <div x-show="openSearch" @click.outside="openSearch = false"
                         x-transition
                         class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 shadow-lg rounded-md p-3 z-50">
-
-                        <form method="GET" action="{{ route('products.search') }}">
-                            <input type="text" name="q"
-                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-black"
-                                placeholder="Cari produk...">
-
-                            <button type="submit"
-                                class="mt-2 w-full bg-black text-white py-2 text-sm rounded-md hover:bg-gray-800">
-                                Cari
-                            </button>
-                        </form>
                     </div>
                 </div>
 
