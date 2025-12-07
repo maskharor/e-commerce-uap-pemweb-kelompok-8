@@ -3,38 +3,33 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Store;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class StoreSeeder extends Seeder
 {
     public function run(): void
     {
-        $sellerUser = User::create([
-            'name' => 'Seller Unverified Manual',
-            'email' => 'seller.manual@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'member', 
-        ]);
+        // ambil salah satu member (member pertama)
+        $member = User::where('role', 'member')->first();
 
-        $sellerUser->store()->create([
-            'name' => 'Toko ABC Belum Verif',
-            'logo' => 'default_logo.png',
-            'about' => 'Deskripsi singkat tentang toko yang menunggu verifikasi admin.',
-            'phone' => '08111222333',
-            'address_id' => '12345',
-            'city' => 'Bandung',
-            'address' => 'Jalan Kebon Jeruk No 15',
-            'postal_code' => '40111',
-            'is_verified' => false, 
-        ]);
-        
-        User::create([
-            'name' => 'Admin Owner',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin', 
+        // kalau belum ada member, stop biar gak error
+        if (!$member) {
+            $this->command->warn('Seeder Store dibatalkan: tidak ada user role member.');
+            return;
+        }
+
+        Store::create([
+            'user_id' => $member->id,
+            'name' => 'Toko Member Pertama',
+            'logo' => 'logos/toko1.png', 
+            'about' => 'Toko ini milik salah satu member.',
+            'phone' => '081234567890',
+            'address_id' => 1, 
+            'city' => 'Jakarta',
+            'address' => 'Jl. Contoh No. 123',
+            'postal_code' => '12345',
+            'is_verified' => true,
         ]);
     }
 }

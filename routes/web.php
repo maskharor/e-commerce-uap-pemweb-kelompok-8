@@ -25,17 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-   Route::get('/register/store', [ProfileController::class, 'storeRegisterForm'])->name('store.register.form');
-    Route::post('/register/store', [ProfileController::class, 'storeRegisterSubmit'])->name('store.register.submit');
-    
-    // Rute untuk Buyer (Form Registrasi Profil Buyer)
-    // KOREKSI GET: Ubah 'showBuyerForm' menjadi 'buyerRegisterForm'
-    Route::get('/register/buyer', [ProfileController::class, 'buyerRegisterForm'])->name('buyer.register.form'); 
-    
-    // KOREKSI POST: Ubah 'storeBuyerData' menjadi 'buyerRegisterSubmit'
-    Route::post('/register/buyer', [ProfileController::class, 'buyerRegisterSubmit'])->name('buyer.register.submit');
-
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
