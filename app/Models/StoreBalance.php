@@ -32,4 +32,9 @@ class StoreBalance extends Model
     {
         return $this->hasMany(Withdrawal::class);
     }
+
+    public function storeBalance()
+    {
+        return $this->belongsTo(StoreBalance::class, 'store_balance_id', 'id');
+    }
 }

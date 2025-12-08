@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SellerProfileController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -42,6 +43,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update'); // Menggunakan PUT untuk UPDATE
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy'); // Menggunakan DELETE untuk HAPUS
+});
+
+Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(function () {
+    Route::get('/profile', [SellerProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [SellerProfileController::class, 'updateStore'])->name('profile.update');
+    Route::post('/bank-accounts', [SellerProfileController::class, 'storeBank'])->name('bank.store');
+    Route::put('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'updateBank'])->name('bank.update');
+    Route::delete('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'destroyBank'])->name('bank.destroy');
 });
 
 require __DIR__ . '/auth.php';
