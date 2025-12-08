@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -21,11 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('stores', StoreController::class);
+    Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
+
+    Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
-    
+
     Route::get('/stores/verification', [AdminController::class, 'storeVerification'])->name('admin.stores.verification');
     Route::post('/stores/{store}/verify', [AdminController::class, 'verifyStore'])->name('admin.stores.verify');
     Route::post('/stores/{store}/reject', [AdminController::class, 'rejectStore'])->name('admin.stores.reject'); // Opsional
@@ -36,4 +40,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy'); // Menggunakan DELETE untuk HAPUS
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
