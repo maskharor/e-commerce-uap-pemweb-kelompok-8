@@ -1,31 +1,47 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+<nav x-data="{ open: false }" class="bg-white/90 border-b border-slate-200 sticky top-0 z-50 shadow-sm backdrop-blur">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
 
-            <!-- Logo -->
+            <!-- Logo + Brand -->
             <div class="flex items-center space-x-4">
-                <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('LogoProjectKiloMeter.svg') }}" class="h-10 w-auto" alt="Logo">
-
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('LogoProjectKiloMeter.svg') }}" class="h-10 w-auto" alt="KiloMeter Logo">
+                        @auth
+                            @if (Auth::user()->role === 'admin')
+                                <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 align-middle">
+                                    Admin Area
+                                </span>
+                            @endif
+                        @endauth
+                    </span>
                 </a>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:flex">
+                <div class="hidden space-x-4 sm:flex sm:items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                        class="text-black hover:text-gray-700">
+                        class="text-slate-700 hover:text-slate-900">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @auth
+                        @if (Auth::user()->role === 'admin')
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')"
+                                class="text-slate-700 hover:text-slate-900">
+                                {{ __('Admin Panel') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
             <!-- Right Side -->
             <div class="hidden sm:flex items-center space-x-6">
 
-                <!-- Search with Dropdown -->
+                <!-- (Kosongkan dropdown search dulu – siap diisi nanti) -->
                 <div x-data="{ openSearch: false }" class="relative">
                     <button @click="openSearch = !openSearch"
-                        class="text-black hover:text-gray-700 p-2 rounded-full transition">
+                        class="text-slate-600 hover:text-slate-900 p-2 rounded-full transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -33,46 +49,58 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown Search Box -->
                     <div x-show="openSearch" @click.outside="openSearch = false"
                         x-transition
-                        class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 shadow-lg rounded-md p-3 z-50">
+                        class="absolute right-0 mt-2 w-64 bg-white border border-slate-200 shadow-xl rounded-xl p-3 z-50">
+                        <p class="text-xs text-slate-500 mb-2">Fitur pencarian akan datang 🙂</p>
+                        <input
+                            type="text"
+                            class="w-full text-sm border-slate-200 rounded-lg shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+                            placeholder="Cari pengguna, toko, dll (coming soon)">
                     </div>
                 </div>
 
                 <!-- Avatar Dropdown -->
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="border border-gray-300 rounded-full w-9 h-9 flex items-center justify-center overflow-hidden bg-gray-200 text-black">
-                            @if (Auth::user()->profile_photo_url ?? false)
-                            <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
-                            @else
-                            <span class="font-semibold text-sm">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </span>
-                            @endif
-                        </button>
-                    </x-slot>
+                @auth
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center overflow-hidden bg-slate-100 text-slate-800">
+                                @if (Auth::user()->profile_photo_url ?? false)
+                                    <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
+                                @else
+                                    <span class="font-semibold text-sm">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </button>
+                        </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <x-slot name="content">
+                            <div class="px-3 pb-2 border-b border-slate-100 mb-2">
+                                <p class="text-xs text-slate-400">Masuk sebagai</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-slate-500">{{ Auth::user()->email }}</p>
+                            </div>
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
                             </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                @endauth
             </div>
 
-            <!-- Mobile Search Icon -->
+            <!-- Mobile Buttons -->
             <div class="sm:hidden flex items-center space-x-2">
-                <button class="text-black hover:text-gray-700 p-2 rounded-full transition">
+                <button class="text-slate-700 hover:text-slate-900 p-2 rounded-full transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -80,9 +108,8 @@
                     </svg>
                 </button>
 
-                <!-- Hamburger for Avatar Menu -->
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-black hover:bg-gray-100 focus:outline-none transition">
+                    class="inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:bg-slate-100 focus:outline-none transition">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -98,47 +125,57 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-gray-200">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-slate-200">
         <div class="px-4 pt-4 pb-2 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @auth
+                @if (Auth::user()->role === 'admin')
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                        {{ __('Admin Panel') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive User Menu -->
-        <div class="pt-4 pb-4 border-t border-gray-200">
-            <div class="px-4 flex items-center space-x-3">
+        @auth
+            <div class="pt-4 pb-4 border-t border-slate-200">
+                <div class="px-4 flex items-center space-x-3">
 
-                <!-- Avatar -->
-                <div class="border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center bg-gray-200 text-black overflow-hidden">
-                    @if (Auth::user()->profile_photo_url ?? false)
-                    <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
-                    @else
-                    <span class="font-semibold text-sm">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </span>
-                    @endif
+                    <!-- Avatar -->
+                    <div class="border border-slate-200 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-800 overflow-hidden">
+                        @if (Auth::user()->profile_photo_url ?? false)
+                            <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
+                        @else
+                            <span class="font-semibold text-sm">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </span>
+                        @endif
+                    </div>
+
+                    <div>
+                        <div class="font-medium text-base text-slate-900">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-slate-600">{{ Auth::user()->email }}</div>
+                    </div>
                 </div>
 
-                <div>
-                    <div class="font-medium text-base text-black">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-600">{{ Auth::user()->email }}</div>
-                </div>
-            </div>
-
-            <div class="mt-3 space-y-1 px-4">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault(); this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                <div class="mt-3 space-y-1 px-4">
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
-                </form>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault(); this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
             </div>
-        </div>
+        @endauth
     </div>
 </nav>
