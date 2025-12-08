@@ -6,10 +6,11 @@ use App\Models\Product;
 
 class CheckoutController extends Controller
 {
+    // Checkout untuk satu produk (dari tombol di kartu produk)
     public function start(Product $product)
     {
-        // Nanti diisi halaman checkout beneran.
-        // Untuk sekarang, tampilkan placeholder.
+        $product->load(['store', 'productImages', 'productCategory']);
+
         return view('checkout.index', compact('product'));
     }
 }

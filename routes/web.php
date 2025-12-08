@@ -23,7 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('stores', StoreController::class);
     Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
-
+    Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/cart/{product}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
 });
 

@@ -100,7 +100,6 @@
 
                         <div class="pt-1 flex items-center justify-between gap-2">
 
-                            {{-- Kalau BELUM login: arahkan ke halaman login --}}
                             @guest
                             <a href="{{ route('login') }}"
                                 class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800">
@@ -108,25 +107,54 @@
                             </a>
                             @endguest
 
-                            {{-- Kalau SUDAH login: tampilkan tombol keranjang & checkout --}}
                             @auth
-                            {{-- Tambah ke Keranjang --}}
+                            {{-- TOMBOL ADD TO CART (ikon → extend teks) --}}
                             <form method="POST" action="{{ route('cart.add', $product) }}">
                                 @csrf
                                 <button type="submit"
-                                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800">
-                                    Tambah ke Keranjang
+                                    class="group inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-1.5 hover:bg-slate-800 transition-all duration-200">
+
+                                    {{-- Icon keranjang --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="2"
+                                        stroke="currentColor"
+                                        class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.25 2.25h1.386c.51 0 .955.343 1.087.835L5.91 8.25m0 0h12.24m-12.24 0l1.318 5.272c.132.492.577.835 1.087.835h7.67c.51 0 .955-.343 1.087-.835L18.75 8.25m-1.44 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-8.31 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                    </svg>
+
+                                    {{-- Teks yang muncul saat hover --}}
+                                    <span
+                                        class="ml-0 max-w-0 overflow-hidden whitespace-nowrap text-[10px] font-semibold transition-all duration-200 group-hover:ml-2 group-hover:max-w-[80px]">
+                                        Add to cart
+                                    </span>
                                 </button>
                             </form>
 
-                            {{-- Checkout langsung 1 produk (opsional) --}}
+                            {{-- TOMBOL CHECKOUT (ikon → extend teks) --}}
                             <a href="{{ route('checkout.start', $product) }}"
-                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600">
-                                Checkout
+                                class="group inline-flex items-center rounded-full bg-emerald-500 text-white px-2 py-1.5 hover:bg-emerald-600 transition-all duration-200">
+
+                                {{-- Icon checkout (panah kanan) --}}
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4.5 12h15m0 0l-4.5-4.5M19.5 12l-4.5 4.5" />
+                                </svg>
+
+                                {{-- Teks yang muncul saat hover --}}
+                                <span
+                                    class="ml-0 max-w-0 overflow-hidden whitespace-nowrap text-[10px] font-semibold transition-all duration-200 group-hover:ml-2 group-hover:max-w-[80px]">
+                                    Checkout
+                                </span>
                             </a>
                             @endauth
 
                         </div>
+
                     </div>
                 </div>
                 @endforeach

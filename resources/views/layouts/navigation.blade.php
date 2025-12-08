@@ -17,17 +17,12 @@
                     </x-nav-link>
 
                     @auth
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                            class="text-slate-700 hover:text-slate-900">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-
-                        @if (Auth::user()->role === 'admin')
-                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')"
-                                class="text-slate-700 hover:text-slate-900">
-                                {{ __('Admin Panel') }}
-                            </x-nav-link>
-                        @endif
+                    @if (Auth::user()->role === 'admin')
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')"
+                        class="text-slate-700 hover:text-slate-900">
+                        {{ __('Admin Panel') }}
+                    </x-nav-link>
+                    @endif
                     @endauth
                 </div>
             </div>
@@ -59,51 +54,71 @@
 
                 {{-- Guest: tombol Login & Register --}}
                 @guest
-                    <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">
-                        Masuk
-                    </a>
+                <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">
+                    Masuk
+                </a>
 
-                    <a href="{{ route('register') }}"
-                       class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest bg-emerald-500 text-white hover:bg-emerald-600">
-                        Daftar
-                    </a>
+                <a href="{{ route('register') }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest bg-emerald-500 text-white hover:bg-emerald-600">
+                    Daftar
+                </a>
                 @endguest
 
                 {{-- Auth: avatar dropdown --}}
                 @auth
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center overflow-hidden bg-slate-100 text-slate-800">
-                                @if (Auth::user()->profile_photo_url ?? false)
-                                    <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
-                                @else
-                                    <span class="font-semibold text-sm">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    </span>
-                                @endif
-                            </button>
-                        </x-slot>
+                <a href="{{ route('cart.index') }}"
+                    class="group inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-1.5 hover:bg-slate-800 transition-all duration-200">
 
-                        <x-slot name="content">
-                            <div class="px-3 pb-2 border-b border-slate-100 mb-2">
-                                <p class="text-xs text-slate-400">Masuk sebagai</p>
-                                <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-slate-500">{{ Auth::user()->email }}</p>
-                            </div>
+                    {{-- ICON KERANJANG --}}
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 2.25h1.386c.51 0 .955.343 1.087.835L5.91 8.25m0 0h12.24m-12.24 0l1.318 5.272c.132.492.577.835 1.087.835h7.67c.51 0 .955-.343 1.087-.835L18.75 8.25m-1.44 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-8.31 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                    </svg>
 
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                    {{-- TEKS YANG MUNCUL SAAT HOVER --}}
+                    <span
+                        class="ml-0 max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold transition-all duration-200 group-hover:ml-2 group-hover:max-w-xs">
+                        Keranjang
+                    </span>
+                </a>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="border border-slate-200 rounded-full w-9 h-9 flex items-center justify-center overflow-hidden bg-slate-100 text-slate-800">
+                            @if (Auth::user()->profile_photo_url ?? false)
+                            <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
+                            @else
+                            <span class="font-semibold text-sm">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </span>
+                            @endif
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <div class="px-3 pb-2 border-b border-slate-100 mb-2">
+                            <p class="text-xs text-slate-400">Masuk sebagai</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-slate-500">{{ Auth::user()->email }}</p>
+                        </div>
+
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault(); this.closest('form').submit();">
+                                {{ __('Log Out') }}
                             </x-dropdown-link>
-
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
                 @endauth
             </div>
 
@@ -141,64 +156,64 @@
             </x-responsive-nav-link>
 
             @auth
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
 
-                @if (Auth::user()->role === 'admin')
-                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                        {{ __('Admin Panel') }}
-                    </x-responsive-nav-link>
-                @endif
+            @if (Auth::user()->role === 'admin')
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                {{ __('Admin Panel') }}
+            </x-responsive-nav-link>
+            @endif
             @endauth
         </div>
 
         @auth
-            <div class="pt-4 pb-4 border-t border-slate-200">
-                <div class="px-4 flex items-center space-x-3">
-                    <div class="border border-slate-200 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-800 overflow-hidden">
-                        @if (Auth::user()->profile_photo_url ?? false)
-                            <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
-                        @else
-                            <span class="font-semibold text-sm">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </span>
-                        @endif
-                    </div>
-
-                    <div>
-                        <div class="font-medium text-base text-slate-900">{{ Auth::user()->name }}</div>
-                        <div class="font-medium text-sm text-slate-600">{{ Auth::user()->email }}</div>
-                    </div>
+        <div class="pt-4 pb-4 border-t border-slate-200">
+            <div class="px-4 flex items-center space-x-3">
+                <div class="border border-slate-200 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-800 overflow-hidden">
+                    @if (Auth::user()->profile_photo_url ?? false)
+                    <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
+                    @else
+                    <span class="font-semibold text-sm">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </span>
+                    @endif
                 </div>
 
-                <div class="mt-3 space-y-1 px-4">
-                    <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault(); this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
-                    </form>
+                <div>
+                    <div class="font-medium text-base text-slate-900">{{ Auth::user()->name }}</div>
+                    <div class="font-medium text-sm text-slate-600">{{ Auth::user()->email }}</div>
                 </div>
             </div>
+
+            <div class="mt-3 space-y-1 px-4">
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-responsive-nav-link :href="route('logout')"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-responsive-nav-link>
+                </form>
+            </div>
+        </div>
         @endauth
 
         @guest
-            <div class="pt-2 pb-4 border-t border-slate-200">
-                <div class="px-4 space-y-1">
-                    <x-responsive-nav-link :href="route('login')">
-                        {{ __('Masuk') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('register')">
-                        {{ __('Daftar') }}
-                    </x-responsive-nav-link>
-                </div>
+        <div class="pt-2 pb-4 border-t border-slate-200">
+            <div class="px-4 space-y-1">
+                <x-responsive-nav-link :href="route('login')">
+                    {{ __('Masuk') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('register')">
+                    {{ __('Daftar') }}
+                </x-responsive-nav-link>
             </div>
+        </div>
         @endguest
     </div>
 </nav>
