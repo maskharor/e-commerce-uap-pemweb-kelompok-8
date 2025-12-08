@@ -21,11 +21,8 @@
                 <div class="hidden md:flex flex-col justify-between rounded-2xl bg-slate-900/60 border border-slate-700/60 p-8 shadow-2xl">
                     <div>
                         <div class="flex items-center gap-3">
-                            {{-- Ganti src di bawah dengan path logo kamu --}}
                             <div class="h-12 w-12 rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden">
-                                {{-- contoh kalau pakai gambar logo sendiri --}}
-                                {{-- <img src="{{ asset('images/logo-kilometer.png') }}" alt="KiloMeter" class="h-12 w-12 object-cover"> --}}
-                                <span class="text-xl font-bold tracking-tight text-emerald-400">KM</span>
+                                <img src="{{ asset('KMNeonLogo.svg') }}" alt="KiloMeter" class="h-12 w-12 object-cover">
                             </div>
                             <div>
                                 <h1 class="text-2xl font-bold tracking-tight">KiloMeter</h1>
