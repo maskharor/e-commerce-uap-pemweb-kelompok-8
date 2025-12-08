@@ -3,28 +3,25 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
 
-            <!-- Logo + Brand -->
+            <!-- Logo + Brand + Nav Links -->
             <div class="flex items-center space-x-4">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                <a href="{{ route('home') }}" class="flex items-center gap-2">
                     <img src="{{ asset('LogoProjectKiloMeter.svg') }}" class="h-10 w-auto" alt="KiloMeter Logo">
-                        @auth
-                            @if (Auth::user()->role === 'admin')
-                                <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 align-middle">
-                                    Admin Area
-                                </span>
-                            @endif
-                        @endauth
-                    </span>
                 </a>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-4 sm:flex sm:items-center">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')"
                         class="text-slate-700 hover:text-slate-900">
-                        {{ __('Dashboard') }}
+                        {{ __('Beranda') }}
                     </x-nav-link>
 
                     @auth
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
+                            class="text-slate-700 hover:text-slate-900">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+
                         @if (Auth::user()->role === 'admin')
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')"
                                 class="text-slate-700 hover:text-slate-900">
@@ -38,7 +35,7 @@
             <!-- Right Side -->
             <div class="hidden sm:flex items-center space-x-6">
 
-                <!-- (Kosongkan dropdown search dulu – siap diisi nanti) -->
+                {{-- Search simple placeholder (bisa dikembangkan nanti) --}}
                 <div x-data="{ openSearch: false }" class="relative">
                     <button @click="openSearch = !openSearch"
                         class="text-slate-600 hover:text-slate-900 p-2 rounded-full transition">
@@ -56,11 +53,23 @@
                         <input
                             type="text"
                             class="w-full text-sm border-slate-200 rounded-lg shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Cari pengguna, toko, dll (coming soon)">
+                            placeholder="Cari produk (coming soon)">
                     </div>
                 </div>
 
-                <!-- Avatar Dropdown -->
+                {{-- Guest: tombol Login & Register --}}
+                @guest
+                    <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">
+                        Masuk
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                       class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest bg-emerald-500 text-white hover:bg-emerald-600">
+                        Daftar
+                    </a>
+                @endguest
+
+                {{-- Auth: avatar dropdown --}}
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -127,11 +136,15 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-slate-200">
         <div class="px-4 pt-4 pb-2 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                {{ __('Beranda') }}
             </x-responsive-nav-link>
 
             @auth
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+
                 @if (Auth::user()->role === 'admin')
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                         {{ __('Admin Panel') }}
@@ -140,12 +153,9 @@
             @endauth
         </div>
 
-        <!-- Responsive User Menu -->
         @auth
             <div class="pt-4 pb-4 border-t border-slate-200">
                 <div class="px-4 flex items-center space-x-3">
-
-                    <!-- Avatar -->
                     <div class="border border-slate-200 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-800 overflow-hidden">
                         @if (Auth::user()->profile_photo_url ?? false)
                             <img src="{{ Auth::user()->profile_photo_url }}" class="object-cover w-full h-full">
@@ -177,5 +187,18 @@
                 </div>
             </div>
         @endauth
+
+        @guest
+            <div class="pt-2 pb-4 border-t border-slate-200">
+                <div class="px-4 space-y-1">
+                    <x-responsive-nav-link :href="route('login')">
+                        {{ __('Masuk') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('register')">
+                        {{ __('Daftar') }}
+                    </x-responsive-nav-link>
+                </div>
+            </div>
+        @endguest
     </div>
 </nav>
