@@ -9,6 +9,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SellerProfileController;
 use App\Http\Controllers\SellerCategoryController;
+use App\Http\Controllers\SellerProductController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -54,6 +55,10 @@ Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(functio
     Route::put('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'updateBank'])->name('bank.update');
     Route::delete('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'destroyBank'])->name('bank.destroy');
     Route::resource('categories', SellerCategoryController::class);
+    Route::resource('products', SellerProductController::class);
+    Route::post('products/{product}/images', [SellerProductController::class, 'storeImage'])->name('products.images.store');
+    Route::delete('products/{product}/images/{image}', [SellerProductController::class, 'destroyImage'])->name('products.images.destroy');
+    Route::post('products/{product}/images/{image}/thumbnail', [SellerProductController::class, 'setThumbnail'])->name('products.images.thumbnail');
 });
 
 require __DIR__ . '/auth.php';
