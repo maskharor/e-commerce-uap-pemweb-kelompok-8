@@ -25,7 +25,6 @@ class StoreSeeder extends Seeder
             'logo' => 'logos/toko1.png', 
             'about' => 'Toko ini milik salah satu member.',
             'phone' => '081234567890',
-            'address_id' => 1, 
             'city' => 'Jakarta',
             'address' => 'Jl. Contoh No. 123',
             'postal_code' => '12345',
