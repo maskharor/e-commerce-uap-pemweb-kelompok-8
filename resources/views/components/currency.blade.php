@@ -1,8 +1,17 @@
-@props(['value'])
+@props([
+    'value' => 0,
+])
 
 @php
-    $numeric = preg_replace('/[^0-9]/', '', (string) ($value ?? 0));
-    $formatted = 'Rp ' . number_format((int) $numeric, 0, ',', '.');
+    if (is_numeric($value)) {
+        $numeric = (int) $value;
+    } else {
+        $numeric = (int) preg_replace('/[^0-9]/', '', (string) ($value ?? 0));
+    }
+
+    $formatted = 'Rp ' . number_format($numeric, 0, ',', '.');
 @endphp
 
-<span {{ $attributes->merge(['class' => '']) }}>{{ $formatted }}</span>
+<span {{ $attributes->merge(['class' => '']) }}>
+    {{ $formatted }}
+</span>
