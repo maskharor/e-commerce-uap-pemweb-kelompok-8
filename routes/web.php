@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SellerProfileController;
+use App\Http\Controllers\SellerCategoryController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -38,12 +39,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/stores/verification', [AdminController::class, 'storeVerification'])->name('admin.stores.verification');
     Route::post('/stores/{store}/verify', [AdminController::class, 'verifyStore'])->name('admin.stores.verify');
-    Route::post('/stores/{store}/reject', [AdminController::class, 'rejectStore'])->name('admin.stores.reject'); // Opsional
+    Route::post('/stores/{store}/reject', [AdminController::class, 'rejectStore'])->name('admin.stores.reject'); 
 
     Route::get('/users-stores', [AdminController::class, 'userAndStoreManagement'])->name('admin.users-stores.index');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
-    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update'); // Menggunakan PUT untuk UPDATE
-    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy'); // Menggunakan DELETE untuk HAPUS
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy'); 
 });
 
 Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(function () {
@@ -52,6 +53,7 @@ Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(functio
     Route::post('/bank-accounts', [SellerProfileController::class, 'storeBank'])->name('bank.store');
     Route::put('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'updateBank'])->name('bank.update');
     Route::delete('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'destroyBank'])->name('bank.destroy');
+    Route::resource('categories', SellerCategoryController::class);
 });
 
 require __DIR__ . '/auth.php';

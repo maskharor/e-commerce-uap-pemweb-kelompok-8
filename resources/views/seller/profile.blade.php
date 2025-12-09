@@ -1,13 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
+            <a
+                href="{{ route('seller.categories.index') }}"
+                class="inline-flex items-center px-3 py-1.5 rounded-full border border-gray-200 bg-white text-xs font-medium text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+            >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Kembali
+            </a>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profil Toko
             </h2>
-            <a href="{{ url('/seller/dashboard') }}"
-               class="text-sm text-indigo-600 hover:text-indigo-800">
-                &larr; Kembali ke Dashboard
-            </a>
         </div>
     </x-slot>
 
