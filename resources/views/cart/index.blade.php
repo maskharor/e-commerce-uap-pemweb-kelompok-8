@@ -61,14 +61,14 @@
                                 </p>
 
                                 <p class="text-sm font-semibold text-emerald-600">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                    <x-currency :value="$product->price" />
                                     <span class="text-xs text-slate-500">× {{ $qty }}</span>
                                 </p>
 
                                 <p class="text-xs text-slate-500">
                                     Subtotal:
                                     <span class="font-semibold text-slate-900">
-                                        Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                        <x-currency :value="$subtotal" />
                                     </span>
                                 </p>
                             </div>
@@ -93,7 +93,7 @@
                         <p class="text-sm text-slate-600">
                             Total:
                             <span class="text-lg font-bold text-emerald-600">
-                                Rp {{ number_format($total, 0, ',', '.') }}
+                                <x-currency :value="$total" />
                             </span>
                         </p>
                     </div>

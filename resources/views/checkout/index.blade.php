@@ -40,9 +40,7 @@
                         Kategori: {{ $product->productCategory->name }}
                     </p>
                 @endif
-                <p class="text-xl font-bold text-emerald-600 mt-2">
-                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                </p>
+                <x-currency :value="$product->price" class="block text-xl font-bold text-emerald-600 mt-2" />
             </div>
         </div>
 
