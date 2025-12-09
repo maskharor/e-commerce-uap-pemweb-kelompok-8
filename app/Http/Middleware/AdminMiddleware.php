@@ -18,7 +18,7 @@ class AdminMiddleware
         $user = $request->user();
 
         if (!$user || $user->role !== 'admin') {
-            abort(403, 'Anda tidak memiliki akses.');
+            abort(403, 'Anda tidak memiliki akses admin');
         }
 
         return $next($request);
