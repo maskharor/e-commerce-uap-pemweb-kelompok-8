@@ -66,6 +66,13 @@
 
                 {{-- Auth: avatar dropdown --}}
                 @auth
+
+                @if (!Auth::user()->store()->exists())
+                <a href="{{ route('stores.create') }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest bg-emerald-500 text-white hover:bg-emerald-600">
+                    Daftarkan Toko
+                </a>
+                @endif
                 <a href="{{ route('cart.index') }}"
                     class="group inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-1.5 hover:bg-slate-800 transition-all duration-200">
 
@@ -105,6 +112,12 @@
                             <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
                             <p class="text-xs text-slate-500">{{ Auth::user()->email }}</p>
                         </div>
+
+                        @if (Auth::user()->store()->exists())
+                        <x-dropdown-link :href="route('seller.profile.edit')">
+                            {{ __('Store Dashboard') }}
+                        </x-dropdown-link>
+                        @endif
 
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
@@ -184,6 +197,11 @@
             </div>
 
             <div class="mt-3 space-y-1 px-4">
+                @if (!Auth::user()->store()->exists())
+                <x-responsive-nav-link :href="route('stores.create')">
+                    {{ __('Daftarkan Toko') }}
+                </x-responsive-nav-link>
+                @endif
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
