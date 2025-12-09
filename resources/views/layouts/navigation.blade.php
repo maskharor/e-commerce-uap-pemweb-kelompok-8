@@ -73,8 +73,13 @@
                     Daftarkan Toko
                 </a>
                 @endif
+                @php
+                $cart = session('cart', []);
+                $cartCount = is_array($cart) ? array_sum($cart) : 0;
+                @endphp
+
                 <a href="{{ route('cart.index') }}"
-                    class="group inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-1.5 hover:bg-slate-800 transition-all duration-200">
+                    class="relative group inline-flex items-center rounded-full bg-slate-900 text-white px-2 py-1.5 hover:bg-slate-800 transition-all duration-200">
 
                     {{-- ICON KERANJANG --}}
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +97,13 @@
                         class="ml-0 max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold transition-all duration-200 group-hover:ml-2 group-hover:max-w-xs">
                         Keranjang
                     </span>
+
+                    {{-- BADGE JUMLAH ITEM --}}
+                    @if($cartCount > 0)
+                    <span class="absolute -top-1 -right-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white px-1">
+                        {{ $cartCount }}
+                    </span>
+                    @endif
                 </a>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
