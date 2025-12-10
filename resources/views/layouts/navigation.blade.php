@@ -30,27 +30,27 @@
             <!-- Right Side -->
             <div class="hidden sm:flex items-center space-x-6">
 
-                {{-- Search simple placeholder (bisa dikembangkan nanti) --}}
-                <div x-data="{ openSearch: false }" class="relative">
-                    <button @click="openSearch = !openSearch"
-                        class="text-slate-600 hover:text-slate-900 p-2 rounded-full transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+                {{-- 🔍 Search --}}
+                <form action="{{ route('home') }}" method="GET" class="relative">
+                    {{-- pertahankan category filter kalau ada --}}
+                    @if(request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                    @endif
+
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ request('q') }}"
+                        placeholder="Cari sepatu atau toko..."
+                        class="w-56 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    <button type="submit" class="absolute right-2 top-1.5 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
                         </svg>
                     </button>
-
-                    <div x-show="openSearch" @click.outside="openSearch = false"
-                        x-transition
-                        class="absolute right-0 mt-2 w-64 bg-white border border-slate-200 shadow-xl rounded-xl p-3 z-50">
-                        <p class="text-xs text-slate-500 mb-2">Fitur pencarian akan datang 🙂</p>
-                        <input
-                            type="text"
-                            class="w-full text-sm border-slate-200 rounded-lg shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-                            placeholder="Cari produk (coming soon)">
-                    </div>
-                </div>
+                </form>
 
                 {{-- Guest: tombol Login & Register --}}
                 @guest
@@ -128,7 +128,7 @@
                         @if (Auth::user()->store()->exists())
                         <x-dropdown-link :href="route('seller.dashboard')">
                             {{ __('Store Dashboard') }}
-                        </x-dropdown-link>  
+                        </x-dropdown-link>
                         @endif
 
                         <x-dropdown-link :href="route('profile.edit')">
