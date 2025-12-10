@@ -12,6 +12,7 @@ use App\Http\Controllers\SellerProfileController;
 use App\Http\Controllers\SellerCategoryController;
 use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\SellerOrderController;
+use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\TransactionController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
@@ -64,6 +65,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/', [SellerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [SellerProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [SellerProfileController::class, 'updateStore'])->name('profile.update');
     Route::post('/bank-accounts', [SellerProfileController::class, 'storeBank'])->name('bank.store');

@@ -126,9 +126,9 @@
                         </div>
 
                         @if (Auth::user()->store()->exists())
-                        <x-dropdown-link :href="route('seller.profile.edit')">
+                        <x-dropdown-link :href="route('seller.dashboard')">
                             {{ __('Store Dashboard') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link>  
                         @endif
 
                         <x-dropdown-link :href="route('profile.edit')">
