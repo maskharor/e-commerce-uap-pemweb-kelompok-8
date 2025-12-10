@@ -12,8 +12,6 @@ use App\Http\Controllers\SellerProfileController;
 use App\Http\Controllers\SellerCategoryController;
 use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\SellerOrderController;
-use App\Http\Controllers\SellerBalanceController;
-use App\Http\Controllers\SellerWithdrawalController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -30,13 +28,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('stores', StoreController::class);
-    Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
-    Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
+
+    // CART (pakai session)
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::delete('/cart/{product}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+    // CHECKOUT SATU PRODUK
     Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
+    Route::post('/checkout/{product}', [CheckoutController::class, 'process'])->name('checkout.process');
+
+    // Review
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])
         ->name('products.reviews.store');
 });
@@ -54,13 +57,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
 });
 
-Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(function () {
+Route::middleware(['auth'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/profile', [SellerProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [SellerProfileController::class, 'updateStore'])->name('profile.update');
     Route::post('/bank-accounts', [SellerProfileController::class, 'storeBank'])->name('bank.store');
     Route::put('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'updateBank'])->name('bank.update');
     Route::delete('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'destroyBank'])->name('bank.destroy');
-    Route::get('/balance', [SellerBalanceController::class, 'index'])->name('balance.index');
     Route::resource('categories', SellerCategoryController::class);
     Route::resource('products', SellerProductController::class);
     Route::get('/orders', [SellerOrderController::class, 'index'])->name('orders.index');
@@ -68,8 +70,6 @@ Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(functio
     Route::post('products/{product}/images', [SellerProductController::class, 'storeImage'])->name('products.images.store');
     Route::delete('products/{product}/images/{image}', [SellerProductController::class, 'destroyImage'])->name('products.images.destroy');
     Route::post('products/{product}/images/{image}/thumbnail', [SellerProductController::class, 'setThumbnail'])->name('products.images.thumbnail');
-    Route::get('/withdrawals', [SellerWithdrawalController::class, 'index'])->name('withdrawals.index');
-    Route::post('/withdrawals', [SellerWithdrawalController::class, 'store'])->name('withdrawals.store');
 });
 
 require __DIR__ . '/auth.php';

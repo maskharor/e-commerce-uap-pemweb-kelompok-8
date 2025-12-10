@@ -207,5 +207,29 @@
         Kamu sudah memberikan ulasan untuk produk ini. Terima kasih! 💚
     </div>
     @endif
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6 space-y-4">
+        <h3 class="text-lg font-semibold text-slate-900">Ulasan Pembeli ({{ $reviewsCount }})</h3>
+
+        @if ($reviewsCount === 0)
+        <p class="text-sm text-slate-500">Belum ada ulasan.</p>
+        @endif
+
+        @foreach ($reviews as $review)
+        <div class="border-b border-slate-100 pb-3 mb-3">
+            <div class="flex items-center justify-between mb-1">
+                <p class="text-sm font-semibold text-slate-900">
+                    {{ $review->transaction->user->name ?? 'User tidak diketahui' }}
+                </p>
+                <p class="text-xs text-emerald-600 font-medium">
+                    ⭐ {{ $review->rating }}/5
+                </p>
+            </div>
+            <p class="text-sm text-slate-700">
+                {{ $review->comment ?? $review->review }}
+            </p>
+        </div>
+        @endforeach
+    </div>
+
     @endauth
 </x-app-layout>
