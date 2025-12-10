@@ -20,7 +20,7 @@ use App\Http\Controllers\TransactionController;
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Detail produk (sementara belum dipakai, nanti untuk show)
