@@ -57,7 +57,26 @@ class CartController extends Controller
 
         session(['cart' => $cart]);
 
-        return back()->with('success', 'Produk "'.$product->name.'" ditambahkan ke keranjang.');
+        return back()->with('success', 'Produk "' . $product->name . '" ditambahkan ke keranjang.');
+    }
+
+    // 🔁 Update jumlah satu produk di keranjang
+    public function update(Request $request, Product $product)
+    {
+        $data = $request->validate([
+            'qty' => 'required|integer|min:1',
+        ]);
+
+        $cart = session('cart', []);
+
+        if (! isset($cart[$product->id])) {
+            return back()->with('error', 'Produk tidak ada di keranjang.');
+        }
+
+        $cart[$product->id] = $data['qty'];
+        session(['cart' => $cart]);
+
+        return back()->with('success', 'Jumlah produk diperbarui.');
     }
 
     // Hapus satu produk dari keranjang
@@ -70,7 +89,7 @@ class CartController extends Controller
             session(['cart' => $cart]);
         }
 
-        return back()->with('success', 'Produk "'.$product->name.'" dihapus dari keranjang.');
+        return back()->with('success', 'Produk "' . $product->name . '" dihapus dari keranjang.');
     }
 
     // Kosongkan keranjang
