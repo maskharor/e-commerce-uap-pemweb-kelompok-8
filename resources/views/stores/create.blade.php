@@ -9,7 +9,7 @@
             </div>
 
             <div class="mt-3 flex items-center gap-3 text-sm text-slate-500">
-                <a href="{{ route('dashboard') }}" class="hover:text-slate-700">Dashboard</a>
+                <a href="{{ route('home') }}" class="hover:text-slate-700">Dashboard</a>
                 <span>/</span>
                 <span class="text-slate-700 font-medium">Buat Toko</span>
             </div>
