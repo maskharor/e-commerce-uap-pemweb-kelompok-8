@@ -45,7 +45,7 @@ class StoreController extends Controller
 
         Store::create($validated);
 
-        return redirect()->route('dashboard')->with('success', 'Toko berhasil dibuat.');
+        return redirect()->route('home')->with('success', 'Toko berhasil dibuat.');
     }
 
     // FORM EDIT TOKO

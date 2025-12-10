@@ -19,10 +19,6 @@ use App\Http\Controllers\TransactionController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 // Detail produk (sementara belum dipakai, nanti untuk show)
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
