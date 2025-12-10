@@ -15,7 +15,7 @@ class SellerProfileController extends Controller
 
         $store = $user->store()
             ->with(['balance.withdrawals' => function ($q) {
-                $q->orderByDesc('created_at');
+                $q->where('amount', 0)->orderByDesc('created_at');
             }])->firstOrFail();
 
         $balance = $store->balance;

@@ -1,0 +1,155 @@
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex items-center justify-between">
+            <a
+                href="{{ route('seller.profile.edit') }}"
+                class="inline-flex items-center px-3 py-1.5 rounded-full border border-gray-200 bg-white text-xs font-medium text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19l-7-7 7-7" />
+                </svg>
+                Kembali
+            </a>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Penarikan Dana
+            </h2>
+        </div>
+    </x-slot>
+
+    <div class="py-6">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-200 text-green-800 px-4 py-3 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-4 bg-red-100 border border-red-200 text-red-800 px-4 py-3 rounded">
+                    <div class="font-semibold mb-1">Terjadi kesalahan:</div>
+                    <ul class="list-disc list-inside text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1">
+                    <div class="bg-white shadow-sm sm:rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h3 class="font-semibold text-gray-800 text-sm">
+                                Saldo Toko
+                            </h3>
+                        </div>
+                        <div class="px-6 py-5">
+                            <div class="text-3xl font-bold text-gray-900">Rp {{ number_format($balance->balance, 0, ',', '.') }}</div>
+                            <p class="text-sm text-gray-600 mt-2">Saldo yang tersedia dapat diajukan untuk penarikan.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow-sm sm:rounded-lg mt-6">
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h3 class="font-semibold text-gray-800 text-sm">
+                                Ajukan Penarikan
+                            </h3>
+                        </div>
+                        <div class="px-6 py-5">
+                            <form action="{{ route('seller.withdrawals.store') }}" method="POST" class="space-y-4">
+                                @csrf
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        Jumlah Penarikan (Rp)
+                                    </label>
+                                    <input type="number" name="amount" min="1" step="0.01"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                           value="{{ old('amount') }}" placeholder="Masukkan jumlah penarikan">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Pemilik Rekening
+                                    </label>
+                                    <input type="text" name="bank_account_name"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                           value="{{ old('bank_account_name') }}" placeholder="Sesuai rekening bank">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nomor Rekening
+                                    </label>
+                                    <input type="text" name="bank_account_number"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                           value="{{ old('bank_account_number') }}" placeholder="1234567890">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Bank
+                                    </label>
+                                    <input type="text" name="bank_name"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                           value="{{ old('bank_name') }}" placeholder="Nama bank tujuan">
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                                        Ajukan Penarikan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="bg-white shadow-sm sm:rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-800 text-sm">Riwayat Penarikan</h3>
+                        </div>
+                        <div class="px-4 py-5">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
+                                            <th class="px-3 py-2 text-left">Tanggal</th>
+                                            <th class="px-3 py-2 text-left">Jumlah</th>
+                                            <th class="px-3 py-2 text-left">Rekening</th>
+                                            <th class="px-3 py-2 text-left">Bank</th>
+                                            <th class="px-3 py-2 text-left">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @forelse($withdrawals as $wd)
+                                            <tr>
+                                                <td class="px-3 py-2 text-gray-700">{{ $wd->created_at->format('d M Y H:i') }}</td>
+                                                <td class="px-3 py-2 font-semibold text-gray-900">Rp {{ number_format($wd->amount, 0, ',', '.') }}</td>
+                                                <td class="px-3 py-2 text-gray-700">{{ $wd->bank_account_number }} ({{ $wd->bank_account_name }})</td>
+                                                <td class="px-3 py-2 text-gray-700">{{ $wd->bank_name }}</td>
+                                                <td class="px-3 py-2">
+                                                    <span class="inline-flex px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700 capitalize">
+                                                        {{ $wd->status }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="px-3 py-4 text-center text-xs text-gray-500">
+                                                    Belum ada pengajuan penarikan dana.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
