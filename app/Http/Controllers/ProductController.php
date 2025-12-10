@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -31,20 +33,62 @@ class ProductController extends Controller
         $products = $productsQuery->latest()->paginate(12)->withQueryString();
 
         return view('products.index', [
-            'categories'        => $categories,
-            'products'          => $products,
-            'activeCategorySlug'=> $activeCategorySlug,
+            'categories'         => $categories,
+            'products'           => $products,
+            'activeCategorySlug' => $activeCategorySlug,
         ]);
     }
 
     /**
-     * Nanti untuk detail produk (guest juga boleh akses).
-     * Untuk sekarang bisa di-skip, atau biarkan dulu stub.
+     * Detail 1 produk (guest boleh akses).
+     * Sekaligus data ulasan & info apakah user boleh mengulas.
      */
     public function show(Product $product)
     {
-        $product->load(['store', 'productImages', 'productCategory']);
+        $product->load([
+            'store.user',
+            'productImages',
+            'productCategory',
+            'productReviews.transaction.user',
+        ]);
 
-        return view('products.show', compact('product'));
+        $reviews      = $product->productReviews()->latest()->get();
+        $reviewsCount = $reviews->count();
+        $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : null;
+
+        $canReview   = false;
+        $hasReviewed = false;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Cari transaction detail untuk user ini & produk ini
+            $transactionDetail = $product->transactionDetails()
+                ->whereHas('transaction', function ($q) use ($user) {
+                    // PASTIKAN kolom 'buyer_id' ini sesuai dg kolom di tabel transactions
+                    $q->where('buyer_id', $user->id);
+                })
+                ->latest()
+                ->first();
+
+            if ($transactionDetail) {
+                $transaction = $transactionDetail->transaction;
+
+                $hasReviewed = ProductReview::where('product_id', $product->id)
+                    ->where('transaction_id', $transaction->id)
+                    ->exists();
+
+                $canReview = ! $hasReviewed;
+            }
+        }
+
+        return view('products.show', compact(
+            'product',
+            'reviews',
+            'reviewsCount',
+            'averageRating',
+            'canReview',
+            'hasReviewed',
+        ));
     }
 }

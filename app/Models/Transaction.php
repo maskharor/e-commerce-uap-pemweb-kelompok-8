@@ -47,4 +47,8 @@ class Transaction extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
 }
