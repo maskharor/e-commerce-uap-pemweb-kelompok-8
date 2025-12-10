@@ -176,12 +176,6 @@
                                 </a>
                             </div>
                         </div>
-
-                        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl shadow-sm p-6 space-y-2">
-                            <p class="text-xs uppercase tracking-wide font-semibold text-white/80">Info</p>
-                            <h3 class="text-xl font-semibold">Performa toko dalam genggaman</h3>
-                            <p class="text-sm text-white/80">Gunakan dashboard ini untuk memantau pesanan terbaru, saldo, serta navigasi cepat ke halaman manajemen toko.</p>
-                        </div>
                     </div>
                 </div>
             </div>
