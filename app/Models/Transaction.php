@@ -22,12 +22,15 @@ class Transaction extends Model
         'grand_total',
         'status',
         'payment_status',
+        'payment_method',
+        'paid_at',
     ];
 
     protected $casts = [
         'shipping_cost' => 'decimal:2',
         'tax' => 'decimal:2',
         'grand_total' => 'decimal:2',
+        'paid_at' => 'datetime',
     ];
 
     public function buyer()

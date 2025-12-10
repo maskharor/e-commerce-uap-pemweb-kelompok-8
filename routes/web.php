@@ -12,6 +12,7 @@ use App\Http\Controllers\SellerProfileController;
 use App\Http\Controllers\SellerCategoryController;
 use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\SellerOrderController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
     // CHECKOUT SATU PRODUK
     Route::get('/checkout/{product}', [CheckoutController::class, 'start'])->name('checkout.start');
     Route::post('/checkout/{product}', [CheckoutController::class, 'process'])->name('checkout.process');
+
+    // Pesanan saya
+    Route::get('/orders', [TransactionController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{transaction}', [TransactionController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{transaction}/pay', [TransactionController::class, 'pay'])->name('orders.pay');
 
     // Review
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])

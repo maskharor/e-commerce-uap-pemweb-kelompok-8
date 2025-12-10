@@ -128,7 +128,7 @@ class CheckoutController extends Controller
                 'shipping'       => $selectedShipping['name'],
                 'shipping_type'  => $selectedShipping['type'],
                 'shipping_cost'  => $shippingCost,
-                'tracking_number'=> null,
+                'tracking_number' => null,
                 'tax'            => $tax,
                 'grand_total'    => $grandTotal,
                 'payment_status' => 'unpaid', // nanti bisa di-update setelah pembayaran
@@ -150,8 +150,8 @@ class CheckoutController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('products.show', $product)
-                ->with('success', 'Checkout berhasil! Pesananmu sudah tercatat. Kamu dapat memberikan ulasan setelah pesanan diproses.');
+                ->route('orders.show', $transaction)
+                ->with('success', 'Checkout berhasil! Pesananmu sudah tercatat.');
         } catch (\Throwable $e) {
             DB::rollBack();
 

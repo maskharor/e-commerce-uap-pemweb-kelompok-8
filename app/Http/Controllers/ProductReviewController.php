@@ -33,13 +33,18 @@ class ProductReviewController extends Controller
 
         $transaction = $transactionDetail->transaction;
 
-        // CEK: sudah pernah review untuk transaksi + produk ini belum?
-        $existing = ProductReview::where('product_id', $product->id)
-            ->where('transaction_id', $transaction->id)
-            ->first();
+        // ⛔ CEK: hanya boleh review jika SUDAH DIBAYAR
+        if ($transaction->payment_status !== 'paid') {
+            return back()->with('error', 'Kamu baru bisa memberi ulasan setelah pembayaran lunas.');
+        }
 
-        if ($existing) {
-            return back()->with('error', 'Anda sudah memberikan ulasan untuk pesanan ini.');
+        // ⛔ CEK apakah user sudah pernah review transaksi ini
+        $alreadyReviewed = ProductReview::where('transaction_id', $transaction->id)
+            ->where('product_id', $product->id)
+            ->exists();
+
+        if ($alreadyReviewed) {
+            return back()->with('error', 'Kamu sudah memberi ulasan untuk pesanan ini.');
         }
 
         ProductReview::create([
