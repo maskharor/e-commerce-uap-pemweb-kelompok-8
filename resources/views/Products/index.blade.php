@@ -33,21 +33,62 @@
                     </p>
                 </div>
 
-                <div class="flex flex-wrap gap-2">
+                @php
+                $maxVisibleCategories = 5;
+                $visibleCategories = $categories->take($maxVisibleCategories);
+                $moreCategories = $categories->slice($maxVisibleCategories);
+                @endphp
+
+                <div class="flex flex-wrap items-center gap-2" x-data="{ openMore: false }">
                     {{-- Tombol "Semua" --}}
-                    <a href="{{ route('home') }}"
+                    <a href="{{ route('home', ['q' => $search ?? null]) }}"
                         class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border
-                        {{ !$activeCategorySlug ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
+                {{ !$activeCategorySlug ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
                         Semua
                     </a>
 
-                    @foreach ($categories as $category)
-                    <a href="{{ route('home', ['category' => $category->slug]) }}"
+                    {{-- Kategori yang terlihat (maks 5) --}}
+                    @foreach ($visibleCategories as $category)
+                    <a href="{{ route('home', ['category' => $category->slug, 'q' => $search ?? null]) }}"
                         class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border
-                            {{ $activeCategorySlug === $category->slug ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
+                    {{ $activeCategorySlug === $category->slug ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
                         {{ $category->name }}
                     </a>
                     @endforeach
+
+                    {{-- Jika kategori lebih dari 5: dropdown "Lainnya" --}}
+                    @if ($moreCategories->isNotEmpty())
+                    <div class="relative">
+                        <button type="button"
+                            @click="openMore = !openMore"
+                            class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+                            Lainnya
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-3 h-3 ml-1"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+
+                        {{-- Menu dropdown --}}
+                        <div x-show="openMore"
+                            @click.outside="openMore = false"
+                            x-transition
+                            class="absolute right-0 mt-2 w-44 rounded-xl border border-slate-100 bg-white shadow-lg z-20">
+                            <div class="py-1 max-h-60 overflow-auto text-xs">
+                                @foreach ($moreCategories as $category)
+                                <a href="{{ route('home', ['category' => $category->slug, 'q' => $search ?? null]) }}"
+                                    class="block px-3 py-1.5 hover:bg-slate-50
+                                       {{ $activeCategorySlug === $category->slug ? 'text-emerald-600 font-semibold' : 'text-slate-700' }}">
+                                    {{ $category->name }}
+                                </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
