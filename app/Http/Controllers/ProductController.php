@@ -20,12 +20,26 @@ class ProductController extends Controller
 
         $productsQuery = Product::with(['store', 'productImages', 'productCategory']);
 
+        // --- 🔍 Ambil keyword search dari query string ?q= ---
+        $search = trim($request->query('q'));
+
         // Filter kategori pakai slug di query string: ?category=slug-kategori
         $activeCategorySlug = $request->query('category');
 
         if ($activeCategorySlug) {
             $productsQuery->whereHas('productCategory', function ($q) use ($activeCategorySlug) {
                 $q->where('slug', $activeCategorySlug);
+            });
+        }
+
+        // --- 🔍 Jika ada keyword, filter produk berdasarkan nama, deskripsi, atau nama toko ---
+        if ($search !== '') {
+            $productsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('store', function ($storeQuery) use ($search) {
+                        $storeQuery->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
