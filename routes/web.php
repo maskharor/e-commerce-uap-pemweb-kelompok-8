@@ -10,6 +10,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SellerProfileController;
 use App\Http\Controllers\SellerCategoryController;
 use App\Http\Controllers\SellerProductController;
+use App\Http\Controllers\SellerOrderController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -56,6 +57,8 @@ Route::middleware(['auth']) ->prefix('seller') ->name('seller.') ->group(functio
     Route::delete('/bank-accounts/{withdrawal}', [SellerProfileController::class, 'destroyBank'])->name('bank.destroy');
     Route::resource('categories', SellerCategoryController::class);
     Route::resource('products', SellerProductController::class);
+    Route::get('/orders', [SellerOrderController::class, 'index'])->name('orders.index');
+    Route::put('/orders/{transaction}', [SellerOrderController::class, 'update'])->name('orders.update');
     Route::post('products/{product}/images', [SellerProductController::class, 'storeImage'])->name('products.images.store');
     Route::delete('products/{product}/images/{image}', [SellerProductController::class, 'destroyImage'])->name('products.images.destroy');
     Route::post('products/{product}/images/{image}/thumbnail', [SellerProductController::class, 'setThumbnail'])->name('products.images.thumbnail');

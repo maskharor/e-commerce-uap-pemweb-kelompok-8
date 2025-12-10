@@ -20,6 +20,7 @@ class Transaction extends Model
         'tracking_number',
         'tax',
         'grand_total',
+        'status',
         'payment_status',
     ];
 
