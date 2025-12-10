@@ -25,9 +25,9 @@ class SellerWithdrawalController extends Controller
             $store->setRelation('balance', $balance);
         }
 
-        $withdrawals = $balance->withdrawals()->orderByDesc('created_at')->get();
-
-        return view('seller.withdrawals.index', compact('store', 'balance', 'withdrawals'));
+        $withdrawals  = $balance->withdrawals()->where('amount', '>', 0)->orderByDesc('created_at')->get();
+        $bankAccounts = $balance->withdrawals()->where('amount', 0)->orderByDesc('created_at')->get();
+        return view('seller.withdrawals.index', compact('store', 'balance', 'withdrawals', 'bankAccounts'));
     }
 
     public function store(Request $request)
@@ -46,10 +46,8 @@ class SellerWithdrawalController extends Controller
         }
 
         $data = $request->validate([
-            'amount'              => 'required|numeric|min:1',
-            'bank_account_name'   => 'required|string|max:255',
-            'bank_account_number' => 'required|string|max:50',
-            'bank_name'           => 'required|string|max:255',
+            'amount'          => 'required|numeric|min:1',
+            'bank_account_id' => 'required|exists:withdrawals,id',
         ]);
 
         if ($data['amount'] > $balance->balance) {
@@ -57,12 +55,22 @@ class SellerWithdrawalController extends Controller
                 ->withErrors(['amount' => 'Saldo toko tidak mencukupi untuk penarikan.'])
                 ->withInput();
         }
+        
+        $bankAccount = Withdrawal::where('id', $data['bank_account_id'])
+            ->where('store_balance_id', $balance->id)
+            ->where('amount', 0)
+            ->firstOrFail();
 
-        $data['store_balance_id'] = $balance->id;
-        $data['status']           = 'pending';
+        $withdrawalData = [
+            'amount'              => $data['amount'],
+            'bank_account_name'   => $bankAccount->bank_account_name,
+            'bank_account_number' => $bankAccount->bank_account_number,
+            'bank_name'           => $bankAccount->bank_name,
+            'store_balance_id'    => $balance->id,
+            'status'              => 'pending',
+        ];
 
-        $withdrawal = Withdrawal::create($data);
-
+        $withdrawal = Withdrawal::create($withdrawalData);
         $balance->decrement('balance', $data['amount']);
 
         StoreBalanceHistory::create([

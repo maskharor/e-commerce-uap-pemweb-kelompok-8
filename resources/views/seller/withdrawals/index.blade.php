@@ -69,30 +69,26 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Nama Pemilik Rekening
-                                    </label>
-                                    <input type="text" name="bank_account_name"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                           value="{{ old('bank_account_name') }}" placeholder="Sesuai rekening bank">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Nomor Rekening
-                                    </label>
-                                    <input type="text" name="bank_account_number"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                           value="{{ old('bank_account_number') }}" placeholder="1234567890">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Nama Bank
-                                    </label>
-                                    <input type="text" name="bank_name"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                           value="{{ old('bank_name') }}" placeholder="Nama bank tujuan">
+                                      <div class="flex items-center justify-between mb-1">
+                                        <label class="block text-sm font-medium text-gray-700">
+                                            Pilih Rekening Bank
+                                        </label>
+                                        <a href="{{ route('seller.profile.edit') }}" class="text-xs text-indigo-600 hover:underline">Kelola rekening</a>
+                                    </div>
+                                    @if($bankAccounts->isEmpty())
+                                        <div class="rounded-md bg-amber-50 border border-amber-200 text-amber-800 p-3 text-xs">
+                                            Belum ada rekening bank terdaftar. Tambahkan rekening terlebih dahulu pada halaman profil toko.
+                                        </div>
+                                    @else
+                                        <select name="bank_account_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                                            <option value="" disabled {{ old('bank_account_id') ? '' : 'selected' }}>Pilih rekening tujuan</option>
+                                            @foreach($bankAccounts as $account)
+                                                <option value="{{ $account->id }}" {{ old('bank_account_id') == $account->id ? 'selected' : '' }}>
+                                                    {{ $account->bank_name }} - {{ $account->bank_account_number }} ({{ $account->bank_account_name }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
 
                                 <div class="flex justify-end">
